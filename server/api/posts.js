@@ -46,7 +46,7 @@ router.post('/posts',
         ctx.body = await Post.create({
             title: body.title,
             content: body.content,
-            author_id: ctx.passport.user._id,
+            author: ctx.passport.user._id,
             descendants: []
         });
         ctx.status = 201;
@@ -67,7 +67,7 @@ router.patch('/posts/:post_id',
 
         ctx.body = await Post.findOneAndUpdate({
             _id: ctx.params.post_id,
-            author_id: ctx.passport.user._id
+            author: ctx.passport.user._id
         }, Object.assign({}, body), {
             new: true,
             fields: {content: false}
@@ -83,7 +83,7 @@ router.delete('/posts/:post_id',
         try {
             await Post.findOneAndRemove({
                 _id: ctx.params.post_id,
-                author_id: ctx.passport.user._id
+                author: ctx.passport.user._id
             });
         } catch (error) {
             throw error;

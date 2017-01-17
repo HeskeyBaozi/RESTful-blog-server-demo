@@ -29,7 +29,7 @@ export function createPagination(model, getterOptions, defaultOptions) {
             data: await model.find(conditions, projection, {
                 limit: per_page,
                 skip: (page - 1) * per_page
-            })
+            }).populate('author')
         };
         await next();
     }

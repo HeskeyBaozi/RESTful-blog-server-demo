@@ -7,9 +7,9 @@ import {Strategy as BearerStrategy} from 'passport-http-bearer';
 export function registerBearer(passport) {
     passport.use('bearer', new BearerStrategy(async(token, done) => {
         try {
-            const accessToken = await AccessToken.findOne({token}).populate('user_id');
+            const accessToken = await AccessToken.findOne({token}).populate('user');
             if (!accessToken) return done(null, false);
-            return done(null, accessToken.user_id, {scope: '*'});
+            return done(null, accessToken.user, {scope: '*'});
         } catch (error) {
             done(error);
         }

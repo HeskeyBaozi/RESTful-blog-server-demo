@@ -8,9 +8,10 @@ const postSchema = new Schema({
         required: true
     },
     content: {
-        type: String
+        type: String,
+        required: true
     },
-    author_id: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -27,7 +28,7 @@ const postSchema = new Schema({
         required: true,
         default: Date.now()
     },
-    visiable: {
+    visible: {
         type: Boolean,
         required: true,
         default: true
@@ -38,7 +39,6 @@ const postSchema = new Schema({
         transform(doc, ret){
             ret.post_id = ret._id;
             ret.v = ret.__v;
-            ret.created_at = new Date(ret.created_at).getTime();
             delete ret._id;
             delete ret.__v;
             delete ret.id;

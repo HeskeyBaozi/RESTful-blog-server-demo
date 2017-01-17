@@ -9,7 +9,7 @@ const accessTokenSchema = new Schema({
         unique: true,
         required: true,
     },
-    user_id: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         unique: true,
@@ -27,8 +27,6 @@ const accessTokenSchema = new Schema({
         virtuals: true,
         transform(doc, ret) {
             ret.token_id = ret._id;
-            ret.created_at = new Date(ret.created_at).getTime();
-            ret.expires_at = new Date(ret.expires_at).getTime();
             delete ret._id;
             delete ret.id;
         },

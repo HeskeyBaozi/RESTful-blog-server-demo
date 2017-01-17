@@ -11,7 +11,7 @@
     "koa",
     "restful"
   ],
-  "author_id": "Zhiyu He",
+  "author": "Zhiyu He",
   "license": "ISC",
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.16.0",

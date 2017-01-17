@@ -15,11 +15,11 @@ server.exchange(
         });
         if (!user) return false;
 
-        await AccessToken.findOneAndRemove({ user_id: user._id });
+        await AccessToken.findOneAndRemove({ user: user._id });
 
         return [await AccessToken.create({
             token: getHash((Math.random() * 100).toString()) + 'daddy',
-            user_id: user._id,
+            user: user._id,
             created_at: Date.now()
         }), null, {user}];
     })

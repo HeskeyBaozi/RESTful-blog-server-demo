@@ -22,7 +22,7 @@ const commentSchema = new Schema({
         required: true,
         default: Date.now()
     },
-    visiable: {
+    visible: {
         type: Boolean,
         required: true,
         default: true
