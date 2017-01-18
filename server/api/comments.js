@@ -41,7 +41,20 @@ router.post('/comments',
         } else {
             ctx.status = 400;
         }
+    });
 
+router.delete('/comments/:comment_id',
+    async ctx => {
+        const toDelete = await Comment.findOneAndRemove({
+            _id: ctx.params.comment_id,
+            author: ctx.passport.user._id
+        });
+
+        const updatedPost = await Post.findByIdAndUpdate(toDelete.ascendant, {
+            $pull: { descendants: toDelete._id }
+        });
+
+        ctx.body = { success: updatedPost };
     });
 
 export default router.routes();
