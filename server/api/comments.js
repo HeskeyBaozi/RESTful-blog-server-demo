@@ -43,18 +43,37 @@ router.post('/comments',
         }
     });
 
+router.patch('/comments/:comment_id',
+    async ctx => {
+        const body = ctx.request.body;
+        Object.keys(body).forEach(key => {
+            if (!body[key] && key !== 'visible') {
+                delete body[key];
+            }
+        });
+        const conditions = ctx.passport.user.ability === 'super' ? { _id: ctx.params.comment_id } : {
+            _id: ctx.params.comment_id,
+            author: ctx.passport.user._id
+        };
+
+        ctx.body = await Comment.findOneAndUpdate(conditions, { $set: body }, {
+            new: true,
+            populate: { path: 'author', select: 'username' }
+        });
+    });
+
 router.delete('/comments/:comment_id',
     async ctx => {
         const toDelete = await Comment.findOneAndRemove({
             _id: ctx.params.comment_id,
-            author: ctx.passport.user._id
+            author: ctx.passport.user._id // promised that you should be the owner of the comment.
         });
 
         const updatedPost = await Post.findByIdAndUpdate(toDelete.ascendant, {
             $pull: { descendants: toDelete._id }
-        });
+        }, { new: true, fields: { descendants: true } });
 
-        ctx.body = { success: updatedPost };
+        ctx.body = { updatedCommentsList: updatedPost };
     });
 
 export default router.routes();

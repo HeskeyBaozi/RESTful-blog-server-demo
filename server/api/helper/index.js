@@ -1,15 +1,15 @@
 'use strict';
-import {abilityType} from '../../constant';
+import { abilityType } from '../../constant';
 
 
 export function createPagination(model, getterOptions, defaultOptions) {
 
     const limitDefault = defaultOptions.limit || 10;
     const pageDefault = defaultOptions.page || 1;
-    const conditions = getterOptions.conditions || {};
     const projection = getterOptions.projection || {};
 
     return async function (ctx, next) {
+        const conditions = ctx.state && ctx.state.conditions || {};
         const per_page = ctx.query.limit ? Number.parseInt(ctx.query.limit) || limitDefault : limitDefault;
         const page = ctx.query.page ? Number.parseInt(ctx.query.page) : pageDefault;
         const total = await model.count(conditions);
@@ -29,7 +29,7 @@ export function createPagination(model, getterOptions, defaultOptions) {
             data: await model.find(conditions, projection, {
                 limit: per_page,
                 skip: (page - 1) * per_page
-            }).populate('author')
+            }).populate({ path: 'author' }).sort({ created_at: -1 })
         };
         await next();
     }
